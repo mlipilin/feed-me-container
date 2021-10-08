@@ -1,0 +1,30 @@
+import { ArgsTable, Meta, Story, Canvas } from '@storybook/addon-docs/blocks'
+
+import Menu from './index'
+
+<Meta title="Components/Menu" component={Menu} />
+
+## Примеры использования
+
+<Canvas>
+  <Story name="Default" args={{}}>
+    {(args) => <Menu {...args} />}
+  </Story>
+</Canvas>
+
+## Свойства
+
+<ArgsTable of={Menu} />
+
+## CSS-классы
+
+```css
+.Menu {
+}
+.Menu__List {
+}
+.Menu__ListItem {
+}
+.Menu__ListItemLink {
+}
+```

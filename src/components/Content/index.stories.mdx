@@ -1,0 +1,29 @@
+import { ArgsTable, Meta, Story, Canvas } from '@storybook/addon-docs/blocks'
+
+import Content from './index'
+
+<Meta title="Components/Content" component={Content} />
+
+## Примеры использования
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      children: 'Content',
+    }}
+  >
+    {(args) => <Content {...args} />}
+  </Story>
+</Canvas>
+
+## Свойства
+
+<ArgsTable of={Content} />
+
+## CSS-классы
+
+```css
+.Content {
+}
+```

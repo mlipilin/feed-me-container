@@ -1,0 +1,28 @@
+.Menu__List {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.Menu__ListItem {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 15px;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
+}
+
+.Menu__ListItemLink {
+  color: white;
+  text-decoration: none;
+
+  &_active {
+    color: #fd0;
+  }
+}
