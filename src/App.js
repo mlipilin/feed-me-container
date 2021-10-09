@@ -16,8 +16,8 @@ const Browse = (...props) => (
   <MicroFrontend {...props} name={MICROFRONTEND_NAME.BROWSE} />
 )
 
-const Surprise = (...props) => (
-  <MicroFrontend {...props} name={MICROFRONTEND_NAME.SURPRISE} />
+const Restaurant = (...props) => (
+  <MicroFrontend {...props} name={MICROFRONTEND_NAME.RESTAURANT} />
 )
 
 const About = (...props) => (
@@ -32,7 +32,7 @@ function App() {
         <Menu />
         <Content>
           <Switch>
-            <Route path="/surprise" component={Surprise} />
+            <Route path="/restaurant" component={Restaurant} />
             <Route path="/about" component={About} />
             <Route path="/" component={Browse} />
           </Switch>

@@ -9,7 +9,7 @@ const CONTAINER_ID = 'microfrontend-container'
 const TITLE = {
   [MICROFRONTEND_NAME.ABOUT]: 'About',
   [MICROFRONTEND_NAME.BROWSE]: 'Browse Restaurants',
-  [MICROFRONTEND_NAME.SURPRISE]: 'Surprise Me',
+  [MICROFRONTEND_NAME.RESTAURANT]: 'Restaurant',
 }
 
 function loadScript(src) {

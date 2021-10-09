@@ -9,7 +9,7 @@ const ITEMS = [
     name: 'Browse Restaurants',
   },
   {
-    to: '/surprise',
+    to: '/restaurant',
     name: 'Surprise Me',
   },
   {
