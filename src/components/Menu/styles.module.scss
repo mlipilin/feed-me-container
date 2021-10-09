@@ -1,6 +1,7 @@
 .Menu {
-  border-left: 3px solid white;
-  padding-left: 15px;
+  background-color: rgb(255, 56, 255);
+  margin: 0 -30px;
+  padding: 10px 30px;
 }
 
 .Menu__List {
@@ -24,10 +25,10 @@
 }
 
 .Menu__ListItemLink {
-  color: white;
+  color: #9f008a;
   text-decoration: none;
 
   &_active {
-    color: #fd0;
+    color: white;
   }
 }

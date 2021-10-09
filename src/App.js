@@ -6,6 +6,24 @@ import Content from './components/Content'
 import Header from './components/Header'
 import Menu from './components/Menu'
 
+// Constants
+import { MICROFRONTEND_NAME } from './constants'
+
+// Routes
+import MicroFrontend from './routes/MicroFrontend'
+
+const Browse = (...props) => (
+  <MicroFrontend {...props} name={MICROFRONTEND_NAME.BROWSE} />
+)
+
+const Surprise = (...props) => (
+  <MicroFrontend {...props} name={MICROFRONTEND_NAME.SURPRISE} />
+)
+
+const About = (...props) => (
+  <MicroFrontend {...props} name={MICROFRONTEND_NAME.ABOUT} />
+)
+
 function App() {
   return (
     <Router>
@@ -14,9 +32,9 @@ function App() {
         <Menu />
         <Content>
           <Switch>
-            <Route path="/surprise">Surprise Me</Route>
-            <Route path="/about">About</Route>
-            <Route path="/">Browse Restaurants</Route>
+            <Route path="/surprise" component={Surprise} />
+            <Route path="/about" component={About} />
+            <Route path="/" component={Browse} />
           </Switch>
         </Content>
       </Container>
