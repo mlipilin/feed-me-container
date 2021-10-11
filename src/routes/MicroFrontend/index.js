@@ -15,6 +15,7 @@ const TITLE = {
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     if (document.getElementById(src)) {
+      // console.log(`script "${src}": loaded`)
       return resolve()
     }
     const script = document.createElement('script')
@@ -23,6 +24,23 @@ function loadScript(src) {
     script.src = src
     script.id = src
     document.head.appendChild(script)
+  })
+}
+
+function loadStyle(href) {
+  return new Promise((resolve, reject) => {
+    if (document.getElementById(href)) {
+      // console.log(`link "${href}": loaded`)
+      return resolve()
+    }
+    const link = document.createElement('link')
+    link.onload = resolve
+    link.onerror = reject
+    link.rel = 'stylesheet'
+    link.type = 'text/css'
+    link.href = href
+    link.id = href
+    document.head.appendChild(link)
   })
 }
 
@@ -53,7 +71,7 @@ function MicroFrontend(props) {
     }
   }, [name])
 
-  const makeScriptUrl = useCallback(
+  const makeAssetUrl = useCallback(
     (script) => {
       return `${host}/${script}`
     },
@@ -65,16 +83,22 @@ function MicroFrontend(props) {
     if (!host) {
       return
     }
-    fetch(makeScriptUrl('asset-manifest.json'))
+    fetch(makeAssetUrl('asset-manifest.json'))
       .then((response) => response.json())
       .then(({ entrypoints }) => {
         const scripts = entrypoints
           .filter((e) => /static\/js/.test(e))
-          .map(makeScriptUrl)
-        return Promise.all(scripts.map(loadScript))
+          .map(makeAssetUrl)
+        const styles = entrypoints
+          .filter((e) => /static\/css/.test(e))
+          .map(makeAssetUrl)
+        return Promise.all([
+          ...scripts.map(loadScript),
+          ...styles.map(loadStyle),
+        ])
       })
       .then(() => {
-        // console.log('all scripts are loaded')
+        // console.log('all scripts and styles are loaded')
         renderMicrofrontend(name)
       })
       .catch((error) => {
