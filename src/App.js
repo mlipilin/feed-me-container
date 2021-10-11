@@ -30,14 +30,14 @@ function App() {
       <Container>
         <Header />
         <Menu />
-        <Content>
-          <Switch>
-            <Route path="/restaurant" component={Restaurant} />
-            <Route path="/about" component={About} />
-            <Route path="/" component={Browse} />
-          </Switch>
-        </Content>
       </Container>
+      <Content>
+        <Switch>
+          <Route path="/restaurant" component={Restaurant} />
+          <Route path="/about" component={About} />
+          <Route path="/" component={Browse} />
+        </Switch>
+      </Content>
     </Router>
   )
 }
