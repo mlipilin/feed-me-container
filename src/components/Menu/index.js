@@ -1,5 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
-import cn from 'classnames'
+import { NavLink } from 'react-router-dom'
 
 import styles from './styles.module.scss'
 
@@ -9,32 +8,25 @@ const ITEMS = [
     name: 'Browse Restaurants',
   },
   {
-    to: '/restaurant',
-    name: 'Surprise Me',
-  },
-  {
     to: '/about',
     name: 'About',
   },
 ]
 
 function Menu() {
-  const location = useLocation()
-
   return (
     <nav className={styles.Menu}>
       <ul className={styles.Menu__List}>
         {ITEMS.map((item) => (
           <li className={styles.Menu__ListItem} key={item.to}>
-            <Link
-              className={cn(styles.Menu__ListItemLink, {
-                [styles.Menu__ListItemLink_active]:
-                  item.to === location.pathname,
-              })}
+            <NavLink
+              activeClassName={styles.Menu__ListItemLink_active}
+              className={styles.Menu__ListItemLink}
+              exact
               to={item.to}
             >
               {item.name}
-            </Link>
+            </NavLink>
           </li>
         ))}
       </ul>

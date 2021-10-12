@@ -48,8 +48,8 @@ function safetyCall(fn, ...args) {
   typeof fn === 'function' && fn(...args)
 }
 
-function renderMicrofrontend(name) {
-  safetyCall(window[`render${name}`], CONTAINER_ID)
+function renderMicrofrontend(name, history) {
+  safetyCall(window[`render${name}`], CONTAINER_ID, history)
 }
 
 function unmountMicrofrontend(name) {
@@ -57,7 +57,7 @@ function unmountMicrofrontend(name) {
 }
 
 function MicroFrontend(props) {
-  const { name } = props
+  const { history, name } = props
 
   const host = MICROFRONTEND_HOST[name]
 
@@ -99,7 +99,7 @@ function MicroFrontend(props) {
       })
       .then(() => {
         // console.log('all scripts and styles are loaded')
-        renderMicrofrontend(name)
+        renderMicrofrontend(name, history)
       })
       .catch((error) => {
         console.log('error', error)
@@ -110,6 +110,7 @@ function MicroFrontend(props) {
 }
 
 MicroFrontend.propTypes = {
+  history: PropTypes.object.isRequired,
   name: PropTypes.oneOf(Object.values(MICROFRONTEND_NAME)).isRequired,
 }
 
