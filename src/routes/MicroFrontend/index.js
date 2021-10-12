@@ -1,15 +1,17 @@
-import { useCallback, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 // Constants
 import { MICROFRONTEND_HOST, MICROFRONTEND_NAME } from '../../constants'
 
-const CONTAINER_ID = 'microfrontend-container'
-
 const TITLE = {
   [MICROFRONTEND_NAME.ABOUT]: 'About',
   [MICROFRONTEND_NAME.BROWSE]: 'Browse Restaurants',
   [MICROFRONTEND_NAME.RESTAURANT]: 'Restaurant',
+}
+
+function getContainerId(name) {
+  return `${name}-container`
 }
 
 function loadScript(src) {
@@ -45,68 +47,66 @@ function loadStyle(href) {
 }
 
 function safetyCall(fn, ...args) {
-  typeof fn === 'function' && fn(...args)
+  return typeof fn === 'function' ? fn(...args) : undefined
 }
 
 function renderMicrofrontend(name, history) {
-  safetyCall(window[`render${name}`], CONTAINER_ID, history)
+  safetyCall(window[`render${name}`], getContainerId(name), history)
 }
 
 function unmountMicrofrontend(name) {
-  safetyCall(window[`unmount${name}`], CONTAINER_ID)
+  safetyCall(window[`unmount${name}`], getContainerId(name))
 }
 
-function MicroFrontend(props) {
-  const { history, name } = props
+const makeAssetUrl = (host) => (script) => {
+  return `${host}/${script}`
+}
 
+function loadMicroFrontend({ name, history }) {
+  // console.log('loadMicroFrontend', { host })
   const host = MICROFRONTEND_HOST[name]
+  if (!host) {
+    return
+  }
+  fetch(makeAssetUrl(host)('asset-manifest.json'))
+    .then((response) => response.json())
+    .then(({ entrypoints }) => {
+      const scripts = entrypoints
+        .filter((e) => /static\/js/.test(e))
+        .map(makeAssetUrl(host))
+      const styles = entrypoints
+        .filter((e) => /static\/css/.test(e))
+        .map(makeAssetUrl(host))
+      return Promise.all([...scripts.map(loadScript), ...styles.map(loadStyle)])
+    })
+    .then(() => {
+      // console.log('all scripts and styles are loaded')
+      renderMicrofrontend(name, history)
+    })
+    .catch((error) => {
+      console.log('error', error)
+    })
+}
 
-  useEffect(() => {
-    // console.log('MOUNT', { name })
-    document.title = `${TITLE[name]} - Feed Me`
-    loadMicroFrontend()
-    return () => {
-      // console.log('UNMOUNT', { name })
-      unmountMicrofrontend(name)
-    }
-  }, [name])
+class MicroFrontend extends React.Component {
+  componentDidMount() {
+    loadMicroFrontend(this.props)
+  }
 
-  const makeAssetUrl = useCallback(
-    (script) => {
-      return `${host}/${script}`
-    },
-    [host]
-  )
+  componentDidUpdate() {
+    document.title = `${TITLE[this.props.name]} - Feed Me`
+  }
 
-  const loadMicroFrontend = useCallback(() => {
-    // console.log('loadMicroFrontend', { host })
-    if (!host) {
-      return
-    }
-    fetch(makeAssetUrl('asset-manifest.json'))
-      .then((response) => response.json())
-      .then(({ entrypoints }) => {
-        const scripts = entrypoints
-          .filter((e) => /static\/js/.test(e))
-          .map(makeAssetUrl)
-        const styles = entrypoints
-          .filter((e) => /static\/css/.test(e))
-          .map(makeAssetUrl)
-        return Promise.all([
-          ...scripts.map(loadScript),
-          ...styles.map(loadStyle),
-        ])
-      })
-      .then(() => {
-        // console.log('all scripts and styles are loaded')
-        renderMicrofrontend(name, history)
-      })
-      .catch((error) => {
-        console.log('error', error)
-      })
-  }, [host])
+  componentWillUnmount() {
+    unmountMicrofrontend(this.props.name)
+  }
 
-  return <main id={CONTAINER_ID} />
+  render() {
+    const { history, name } = this.props
+    console.log(`MicroFrontend {${name}} history`, history)
+
+    return <main id={getContainerId(name)} />
+  }
 }
 
 MicroFrontend.propTypes = {
